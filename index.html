@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OurBangladesh - 64 Districts, Infinite Stories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <link id="favicon" rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%23ff5533' d='M40,5 C45,10 50,15 52,20 L55,18 L60,25 L65,22 L70,30 L65,40 L75,45 L70,55 L60,60 L65,70 L55,80 L50,90 L45,85 L40,80 L35,85 L30,75 L25,65 L35,55 L30,45 L25,40 L35,35 L40,25 L35,15 L40,5 Z'/></svg>">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body { font-family: 'Poppins', sans-serif; background-color: #ffffff; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f9fafb; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+        /* Card Styles */
+        .info-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .info-card:hover { transform: scale(1.03); z-index: 10; cursor: pointer; }
+        
+        /* Modal Animation */
+        .modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+        .modal-content { transform: scale(0.95); opacity: 0; transition: all 0.3s ease; }
+        .modal-overlay.open .modal-content { transform: scale(1); opacity: 1; }
+
+        .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Color Themes for Divisions (Backgrounds) */
+        .theme-Dhaka { background-color: #fef2f2; border-color: #fecaca; } /* Red-50 */
+        .theme-Dhaka:hover { background-color: #fee2e2; border-color: #fca5a5; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2); }
+        
+        .theme-Chittagong { background-color: #f0fdf4; border-color: #bbf7d0; } /* Green-50 */
+        .theme-Chittagong:hover { background-color: #dcfce7; border-color: #86efac; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.2); }
+
+        .theme-Sylhet { background-color: #ecfdf5; border-color: #a7f3d0; } /* Emerald-50 */
+        .theme-Sylhet:hover { background-color: #d1fae5; border-color: #6ee7b7; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2); }
+
+        .theme-Rajshahi { background-color: #fffbeb; border-color: #fde68a; } /* Amber-50 */
+        .theme-Rajshahi:hover { background-color: #fef3c7; border-color: #fcd34d; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2); }
+
+        .theme-Khulna { background-color: #fff7ed; border-color: #fed7aa; } /* Orange-50 */
+        .theme-Khulna:hover { background-color: #ffedd5; border-color: #fdba74; box-shadow: 0 10px 30px rgba(249, 115, 22, 0.2); }
+
+        .theme-Barisal { background-color: #eff6ff; border-color: #bfdbfe; } /* Blue-50 */
+        .theme-Barisal:hover { background-color: #dbeafe; border-color: #93c5fd; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2); }
+
+        .theme-Rangpur { background-color: #faf5ff; border-color: #e9d5ff; } /* Purple-50 */
+        .theme-Rangpur:hover { background-color: #f3e8ff; border-color: #d8b4fe; box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2); }
+
+        .theme-Mymensingh { background-color: #fdf2f8; border-color: #fbcfe8; } /* Pink-50 */
+        .theme-Mymensingh:hover { background-color: #fce7f3; border-color: #f9a8d4; box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2); }
+
+        .prose h1, .prose h2, .prose h3 { color: #1f2937; font-weight: 700; margin-top: 1em; margin-bottom: 0.5em; }
+        .prose p { margin-bottom: 0.8em; line-height: 1.6; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+        
+        /* Marquee Animation */
+        .ticker-container { width: 100%; overflow: hidden; white-space: nowrap; }
+        .ticker-content { display: inline-block; animation: marquee 30s linear infinite; padding-left: 100%; }
+        .ticker-content:hover { animation-play-state: paused; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+    </style>
+</head>
+<body class="bg-white text-slate-800 flex flex-col min-h-screen">
+
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm backdrop-blur-md bg-white/90">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-full border border-gray-100 shadow-sm p-1">
+                    <svg viewBox="0 0 100 100" class="w-full h-full text-[#ff5533] fill-current">
+                        <path d="M40,5 C45,10 50,15 52,20 L55,18 L60,25 L65,22 L70,30 L65,40 L75,45 L70,55 L60,60 L65,70 L55,80 L50,90 L45,85 L40,80 L35,85 L30,75 L25,65 L35,55 L30,45 L25,40 L35,35 L40,25 L35,15 L40,5 Z"/>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-extrabold tracking-tight text-gray-900 leading-none">OurBangladesh</h1>
+                    <span class="text-[10px] uppercase tracking-widest text-[#ff5533] font-semibold mt-1">64 districts, infinite stories</span>
+                </div>
+            </div>
+            <div class="flex gap-2 text-sm font-medium">
+                <button onclick="switchPage('map')" id="nav-map" class="px-4 py-2 rounded-full transition bg-[#ff5533] text-white shadow-sm hover:shadow-md">Tracker</button>
+                <button onclick="switchPage('info')" id="nav-info" class="px-4 py-2 rounded-full text-gray-600 hover:bg-gray-100 transition">Districts</button>
+                <button onclick="switchPage('news')" id="nav-news" class="px-4 py-2 rounded-full text-gray-600 hover:bg-gray-100 transition">News</button>
+                <button onclick="switchPage('ai')" id="nav-ai" class="px-4 py-2 rounded-full text-gray-600 hover:bg-gray-100 transition flex items-center gap-2">
+                    <i class="fa-solid fa-sparkles text-purple-500"></i> AI Guide
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-8 relative">
+        
+        <div id="page-map" class="animate-fade-in flex flex-col gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-auto md:h-[500px]">
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center h-full">
+                    <div class="w-20 h-20 rounded-full bg-orange-50 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-trophy text-4xl text-[#ff5533]"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">Exploration Score</h2>
+                    <div class="flex items-baseline gap-1 mb-2">
+                        <span id="score-percent" class="text-7xl font-extrabold text-[#ff5533]">0</span>
+                        <span class="text-3xl font-bold text-gray-400">%</span>
+                    </div>
+                    <p class="text-gray-500 mb-8 text-lg">You've visited <span id="score-count" class="font-bold text-gray-800">0</span> / 64 districts</p>
+                    <div class="w-3/4 bg-gray-100 rounded-full h-4 overflow-hidden shadow-inner">
+                        <div id="progress-bar" class="bg-[#ff5533] h-4 rounded-full transition-all duration-1000 relative overflow-hidden" style="width: 0%">
+                            <div class="absolute inset-0 bg-white/20 w-full h-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col h-full overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center flex-shrink-0">
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-lg">Select Districts</h3>
+                            <p class="text-xs text-gray-500">Mark the places you have visited</p>
+                        </div>
+                        <button onclick="clearAll()" class="text-xs text-red-500 hover:text-red-700 font-medium px-3 py-1.5 rounded-md hover:bg-red-50 transition border border-transparent hover:border-red-100">Reset All</button>
+                    </div>
+                    <div class="overflow-y-auto flex-1 p-6 bg-white custom-scrollbar">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2" id="district-checkbox-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full pt-8 pb-4 border-t border-gray-100">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Trending Stories</h2>
+                        <p class="text-sm text-gray-500">Visual highlights from across Bangladesh</p>
+                    </div>
+                    <button onclick="switchPage('news')" class="group flex items-center gap-2 text-[#ff5533] font-bold text-sm hover:bg-orange-50 px-4 py-2 rounded-full transition">
+                        Visit News Portal <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="dashboard-news-gallery"></div>
+            </div>
+        </div>
+
+        <div id="page-info" class="hidden animate-fade-in relative">
+            <div class="max-w-xl mx-auto mb-10 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Know Your Country</h2>
+                <div class="relative group">
+                    <input type="text" id="search-input" placeholder="Search districts..." class="w-full px-6 py-4 rounded-full border border-gray-200 bg-gray-50 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff5533] focus:bg-white transition text-lg group-hover:bg-white">
+                    <i class="fa-solid fa-search absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">Click on any card to view the Map & Details</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="info-grid">
+                </div>
+        </div>
+
+        <div id="district-modal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/80 backdrop-blur-sm">
+            <div class="modal-content bg-white w-[90%] h-[90%] md:w-[80%] md:h-[80%] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative">
+                
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-50 bg-white/90 hover:bg-white text-gray-800 hover:text-red-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all duration-300">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+
+                <div class="flex flex-col md:flex-row h-full">
+                    <div class="w-full md:w-[30%] bg-gray-50 p-8 flex flex-col overflow-y-auto border-r border-gray-100">
+                        <div id="modal-badge" class="inline-block self-start px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">Division</div>
+                        <h2 id="modal-title" class="text-4xl font-extrabold text-gray-900 mb-6">District Name</h2>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Distance from Dhaka</h4>
+                                <div class="flex items-center gap-2 text-gray-800 font-semibold">
+                                    <i class="fa-solid fa-road text-[#ff5533]"></i> <span id="modal-dist">0 km</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Famous Food</h4>
+                                <div class="flex items-start gap-2 text-gray-800">
+                                    <i class="fa-solid fa-utensils text-[#ff5533] mt-1"></i> <span id="modal-food" class="text-sm">Food items</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Key Attractions</h4>
+                                <div class="flex items-start gap-2 text-gray-800">
+                                    <i class="fa-solid fa-map-location-dot text-[#ff5533] mt-1"></i> <span id="modal-place" class="text-sm">Places</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-[70%] h-full bg-gray-200 relative">
+                        <div class="absolute inset-0 flex items-center justify-center z-0 text-gray-400">
+                            <i class="fa-solid fa-circle-notch fa-spin text-3xl"></i>
+                        </div>
+                        <iframe id="modal-map" class="w-full h-full relative z-10" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-news" class="hidden animate-fade-in">
+            <div class="w-full bg-[#ff5533] text-white overflow-hidden py-2 mb-8 relative shadow-md rounded-lg">
+                <div class="absolute left-0 top-0 bottom-0 bg-[#e04422] z-10 px-4 flex items-center font-bold text-xs uppercase tracking-wider shadow-r-md">
+                    Breaking News
+                </div>
+                <div class="ticker-container">
+                    <div class="ticker-content text-sm font-medium">
+                        <span class="inline-block mr-12">🚨 Saint Martin's Island limits tourist overnight stays starting Nov 1.</span>
+                        <span class="inline-block mr-12">🚂 New Intercity 'Cox's Bazar Express' schedule announced by Bangladesh Railway.</span>
+                        <span class="inline-block mr-12">⛈️ Flash flood warning in Sylhet region - travelers advised to check routes.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-4xl font-extrabold text-gray-900 leading-tight">Tourism Voices<br><span class="text-[#ff5533]">of Bangladesh</span></h2>
+                </div>
+                <div class="hidden md:block"><span class="text-xs text-gray-400 font-medium">Updated: Today, 12:00 PM</span></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-8 flex flex-col gap-10">
+                    <div id="news-hero" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[400px]"></div>
+                    <div class="flex flex-wrap gap-2 py-4 border-t border-b border-gray-100 sticky top-20 bg-white/95 backdrop-blur z-40" id="news-filters-page"></div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2"><i class="fa-regular fa-newspaper text-[#ff5533]"></i> Latest Stories</h3>
+                        <div class="flex flex-col gap-6" id="news-feed"></div>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 flex flex-col gap-8">
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                        <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-fire text-orange-500"></i> Trending Now</h4>
+                        <ul class="space-y-4" id="trending-list"></ul>
+                    </div>
+                    <div class="bg-[#1f2937] rounded-2xl p-6 text-white text-center relative overflow-hidden">
+                        <div class="relative z-10">
+                            <i class="fa-regular fa-envelope-open text-3xl mb-3 text-[#ff5533]"></i>
+                            <h4 class="font-bold text-lg mb-2">Travel Weekly</h4>
+                            <input type="email" placeholder="Your email" class="w-full px-4 py-2 rounded-lg text-gray-900 text-sm mb-2 focus:outline-none">
+                            <button class="w-full bg-[#ff5533] hover:bg-[#e04422] text-white py-2 rounded-lg text-sm font-bold transition">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-ai" class="hidden animate-fade-in">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">AI Travel Assistant</h2>
+                    <p class="text-gray-500">Powered by Gemini AI</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border border-purple-100">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Travel Persona</h3>
+                        <div id="persona-result" class="hidden mb-6 p-4 bg-purple-50 rounded-xl prose text-sm"></div>
+                        <button onclick="analyzePersona()" id="btn-persona" class="w-full py-3 bg-purple-600 hover:bg-purple-700 transition text-white rounded-xl font-medium">Analyze Style</button>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border border-blue-100">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Trip Planner</h3>
+                        <textarea id="planner-input" rows="3" placeholder="E.g., I want to visit tea gardens in Sylhet for 3 days." class="w-full p-4 rounded-xl border border-gray-200 text-sm bg-gray-50 mb-4 focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+                        <div id="planner-result" class="hidden mb-4 p-4 bg-blue-50 rounded-xl prose text-sm max-h-[300px] overflow-y-auto"></div>
+                        <button onclick="planTrip()" id="btn-planner" class="w-full py-3 bg-blue-600 hover:bg-blue-700 transition text-white rounded-xl font-medium">Generate Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-50 text-gray-500 py-12 mt-auto border-t border-gray-100">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-xl font-bold text-gray-800 mb-8">Nasif Ibne Mohiuddin</h3>
+            <div class="flex justify-center gap-4 mb-8">
+                <a href="#" class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-[#ff5533] hover:text-white hover:border-[#ff5533] transition-colors shadow-sm"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-[#ff5533] hover:text-white hover:border-[#ff5533] transition-colors shadow-sm"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+            <div class="text-sm border-t border-gray-200 pt-6"><span>© <span id="year"></span> All Rights Reserved</span></div>
+        </div>
+    </footer>
+
+    <script>
+        // Data: 64 Districts
+        const districtsData = [
+            { id: 1, name: "Dhaka", div: "Dhaka", dist: 0, food: "Bakarkhani, Haji Biryani, Star Kabab", place: "Lalbagh Fort, Ahsan Manzil, National Parliament House, Dhakeshwari Temple" },
+            { id: 2, name: "Faridpur", div: "Dhaka", dist: 145, food: "Khejur Gur (Date Molasses), Faridpur Sweets", place: "River Padma, Gerda Mosque, Shrine of Faridpuri" },
+            { id: 3, name: "Gazipur", div: "Dhaka", dist: 35, food: "Jackfruit (National Fruit Hub), Bhawal Sweets", place: "Bhawal National Park, Safari Park, Nuhash Polli" },
+            { id: 4, name: "Gopalganj", div: "Dhaka", dist: 165, food: "Rosogolla, Kotolipara Sweets", place: "Mausoleum of Father of the Nation Bangabandhu Sheikh Mujibur Rahman" },
+            { id: 5, name: "Kishoreganj", div: "Dhaka", dist: 110, food: "Balish Misti (Pillow Sweets), Nikli Haor Fish", place: "Nikli Haor, Austagram Haor, Jangalbari Fort, Shahidi Mosque" },
+            { id: 6, name: "Madaripur", div: "Dhaka", dist: 90, food: "Khejur Gur, Rosomalai", place: "Shakun Lake, Charmuguria Eco Park, Senapati Dighi" },
+            { id: 7, name: "Manikganj", div: "Dhaka", dist: 65, food: "Date Juice (Khejur Rosh), Hajarighur", place: "Baliati Palace, Teota Zamindar Bari, Betila House" },
+            { id: 8, name: "Munshiganj", div: "Dhaka", dist: 27, food: "Patkhir, Bhagyakul Sweets", place: "Idrakpur Fort, Atish Dipankar's Birthplace, Padma Bridge View Point" },
+            { id: 9, name: "Narayanganj", div: "Dhaka", dist: 20, food: "Narayanganj Sweets, Kachchi Biryani", place: "Sonargaon Folk Art Museum, Panam City, Goaldi Mosque" },
+            { id: 10, name: "Narsingdi", div: "Dhaka", dist: 50, food: "Sagar Banana (Amritesagar), Lichi", place: "Wari-Bateshwar Ruins, Dream Holiday Park, Ghorashal" },
+            { id: 11, name: "Rajbari", div: "Dhaka", dist: 120, food: "Chamcham, Milk Products", place: "Godoulia, Rajbari Circuit House, Padma River Bank" },
+            { id: 12, name: "Shariatpur", div: "Dhaka", dist: 75, food: "Cheese, Spices", place: "Modern Hatisoor, Burir Hat Mosque, Fatullah" },
+            { id: 13, name: "Tangail", div: "Dhaka", dist: 95, food: "Porabari Chamcham, Pineapple", place: "Atiya Mosque, Mohera Zamindar Bari, Madhupur National Park" },
+            { id: 14, name: "Bandarban", div: "Chittagong", dist: 316, food: "Bamboo Chicken, Mundi, Hill Tracts Fruits", place: "Nilgiri, Boga Lake, Golden Temple, Keokradong, Nafakhum" },
+            { id: 15, name: "Brahmanbaria", div: "Chittagong", dist: 126, food: "Chanamukhi, Titas Fish", place: "Titas River, Ulchapara Mosque, Haripur Zamindar Bari" },
+            { id: 16, name: "Chandpur", div: "Chittagong", dist: 115, food: "Hilsa Fish (Ilish), One Minute Ice Cream", place: "Mohona (Three River Confluence), Rokto Komol Dighi, Mini Cox's Bazar" },
+            { id: 17, name: "Chittagong", div: "Chittagong", dist: 248, food: "Mezban Beef, Kala Bhuna, Dried Fish", place: "Patenga Beach, Foy's Lake, Ethnological Museum, War Cemetery" },
+            { id: 18, name: "Comilla", div: "Chittagong", dist: 100, food: "Rasmalai (Matri Bhandar), Khadi Cloth", place: "Shalban Vihara, Mainamati Ruins, Dharmasagar Dighi" },
+            { id: 19, name: "Cox's Bazar", div: "Chittagong", dist: 335, food: "Dry Fish (Shutki), Seafood Fry, Lacchi", place: "Longest Sea Beach, Inani Beach, Himchari, Marine Drive" },
+            { id: 20, name: "Feni", div: "Chittagong", dist: 155, food: "Khonder Misti, Mohipal", place: "Bijoy Singh Dighi, Muhuri Dam, King's Mosque" },
+            { id: 21, name: "Khagrachhari", div: "Chittagong", dist: 265, food: "Pajon (Mixed Veg), Indigenous Cuisine", place: "Alutila Cave, Richhang Waterfall, Sajek Valley (Gateway)" },
+            { id: 22, name: "Lakshmipur", div: "Chittagong", dist: 140, food: "Buffalo Curd, Soybeans", place: "Dalal Bazar Zamindar Bari, Khoa Sagor Dighi" },
+            { id: 23, name: "Noakhali", div: "Chittagong", dist: 165, food: "Coconut Sweets, Pitha (Cakes)", place: "Nijhum Dwip, Gandhi Ashram, Bajra Shahi Mosque" },
+            { id: 24, name: "Rangamati", div: "Chittagong", dist: 295, food: "Kaptai Lake Fish, Bamboo Shoot Curry", place: "Hanging Bridge, Kaptai Lake, Shuvolong Waterfall, Rajban Vihara" },
+            { id: 25, name: "Habiganj", div: "Sylhet", dist: 175, food: "Tea, Orange", place: "Satchari National Park, Rema-Kalenga Wildlife Sanctuary" },
+            { id: 26, name: "Moulvibazar", div: "Sylhet", dist: 200, food: "Seven Layer Tea, Lemon", place: "Lawachara Rain Forest, Madhabkunda Waterfall, Ham Ham Waterfall" },
+            { id: 27, name: "Sunamganj", div: "Sylhet", dist: 175, food: "Haor Fish, Shutki", place: "Tanguar Haor, Jadukata River, Barek Tila, Shimul Bagan" },
+            { id: 28, name: "Sylhet", div: "Sylhet", dist: 240, food: "Shatkora Beef, Akhni Polao", place: "Jaflong, Ratargul Swamp Forest, Bisnakandi, Shah Jalal Shrine" },
+            { id: 29, name: "Bogra", div: "Rajshahi", dist: 195, food: "Doi (Curd), Kotkoti", place: "Mahasthangarh (Ancient City), Gokul Medh, Vasu Bihar" },
+            { id: 30, name: "Joypurhat", div: "Rajshahi", dist: 250, food: "Pera Sandesh, Potato", place: "Barer Jah, Hinda-Kasba Shahi Mosque" },
+            { id: 31, name: "Naogaon", div: "Rajshahi", dist: 245, food: "Pera Sandesh, Mango", place: "Paharpur Buddhist Vihara (UNESCO Site), Kusumba Mosque" },
+            { id: 32, name: "Natore", div: "Rajshahi", dist: 210, food: "Kachagolla (Famous Sweet)", place: "Uttara Ganabhaban (Dighapatia Rajbari), Natore Rajbari" },
+            { id: 33, name: "Nawabganj", div: "Rajshahi", dist: 302, food: "Mango (Fazli, Langra), Kalai Ruti", place: "Choto Sona Mosque, Tohan-khana, Mango Orchards" },
+            { id: 34, name: "Pabna", div: "Rajshahi", dist: 154, food: "Ghee, Pera Sweet", place: "Hardinge Bridge, Pabna Mental Hospital (Historic), Tarash Building" },
+            { id: 35, name: "Rajshahi", div: "Rajshahi", dist: 255, food: "Mango, Silk (Reshom)", place: "Varendra Research Museum, Padma Garden, Puthia Temple Complex" },
+            { id: 36, name: "Sirajganj", div: "Rajshahi", dist: 130, food: "Doi, Handloom Saree", place: "Bangabandhu Jamuna Bridge, Rabindra Kuthibari (Shahjadpur)" },
+            { id: 37, name: "Bagerhat", div: "Khulna", dist: 175, food: "Coconut, Shrimp (Golda Chingri)", place: "Sixty Dome Mosque (Shat Gombuj - UNESCO Site), Khan Jahan Ali Mazar" },
+            { id: 38, name: "Chuadanga", div: "Khulna", dist: 215, food: "Date Molasses, Mango", place: "Carew & Co (Sugar Mill), Police Park" },
+            { id: 39, name: "Jessore", div: "Khulna", dist: 165, food: "Khejur Gur, Jamtola Sweets", place: "Michael Madhusudan Dutt Bari, Gadkhali Flower Market" },
+            { id: 40, name: "Jhenaidah", div: "Khulna", dist: 180, food: "Sweets, Banana", place: "Johan Dream Valley Park, Naldanga Temple" },
+            { id: 41, name: "Khulna", div: "Khulna", dist: 180, food: "Chui Jhal Beef, Faluda", place: "Sundarbans (Gateway), 60 Dome Mosque (Nearby), Rupsha Bridge" },
+            { id: 42, name: "Kushtia", div: "Khulna", dist: 185, food: "Kulfi Malai, Tiler Khaja", place: "Lalon Shah Shrine, Shilaidaha Kuthibari (Rabindranath)" },
+            { id: 43, name: "Magura", div: "Khulna", dist: 170, food: "Nabanga, Khamarpara Doi", place: "Sreepur Zamindar Bari, Siddheswari Moth" },
+            { id: 44, name: "Meherpur", div: "Khulna", dist: 240, food: "Mango, Sabri Banana", place: "Mujibnagar Memorial Complex (First Capital), Amjhupi Kuthibari" },
+            { id: 45, name: "Narail", div: "Khulna", dist: 160, food: "Pitha, Fish", place: "SM Sultan Complex, Niribili Picnic Spot" },
+            { id: 46, name: "Satkhira", div: "Khulna", dist: 240, food: "Sandesh, Mango, Prawns", place: "Sundarbans (West), Mandarbariya Sea Beach, Sonabaria Math" },
+            { id: 47, name: "Barguna", div: "Barisal", dist: 245, food: "Hilsa, Sea Fish", place: "Kuakata Beach (Nearby), Haringhata Forest, Sonakata" },
+            { id: 48, name: "Barisal", div: "Barisal", dist: 180, food: "Hog Plum (Amra), Guava", place: "Floating Guava Market (Bhimruli), Durga Sagar Dighi, Bell's Park" },
+            { id: 49, name: "Bhola", div: "Barisal", dist: 205, food: "Buffalo Curd (Mohish Dhoi)", place: "Monpura Island, Char Kukri Mukri, Jacob Tower" },
+            { id: 50, name: "Jhalokati", div: "Barisal", dist: 200, food: "Guava, Gamcha", place: "Kirtipasha Zamindar Bari, Floating Market" },
+            { id: 51, name: "Patuakhali", div: "Barisal", dist: 220, food: "Sweet Betel Leaf, Hilsa", place: "Kuakata (Daughter of Sea) - Sunrise & Sunset View" },
+            { id: 52, name: "Pirojpur", div: "Barisal", dist: 185, food: "Coconut, Guava", place: "Rayerkathi Zamindar Bari, Bhandaria" },
+            { id: 53, name: "Dinajpur", div: "Rangpur", dist: 335, food: "Lichi (Bedana), Chiura", place: "Ramsagar Dighi, Kantajew Temple, Nayabad Mosque" },
+            { id: 54, name: "Gaibandha", div: "Rangpur", dist: 270, food: "Rosomonjur (Sweet)", place: "Balashi Ghat, Dreamland Park" },
+            { id: 55, name: "Kurigram", div: "Rangpur", dist: 315, food: "Khirmohon", place: "Dharla Bridge, Shahi Mosque, Border Areas" },
+            { id: 56, name: "Lalmonirhat", div: "Rangpur", dist: 345, food: "Tea, Tobacco", place: "Tin Bigha Corridor, Teesta Barrage, Burimari Port" },
+            { id: 57, name: "Nilphamari", div: "Rangpur", dist: 360, food: "Domdoma Sweet", place: "Nilsagar, Teesta Barrage, Saidpur Railway Workshop" },
+            { id: 58, name: "Panchagarh", div: "Rangpur", dist: 400, food: "Tea (Organic), Oranges", place: "Tetulia Tea Garden, Kanchenjunga View Point, Banglabandha" },
+            { id: 59, name: "Rangpur", div: "Rangpur", dist: 305, food: "Haribhanga Mango, Shingara", place: "Tajhat Palace, Carmichael College, Vinna Jagat" },
+            { id: 60, name: "Thakurgaon", div: "Rangpur", dist: 405, food: "Hari Kabab, Mango", place: "Baliadangi Mango Tree (Biggest), Jagatpur" },
+            { id: 61, name: "Jamalpur", div: "Mymensingh", dist: 180, food: "Chanachur, Nakshi Kantha", place: "Garo Hill, Lauchapra, Jamuna Fertilizer Factory" },
+            { id: 62, name: "Mymensingh", div: "Mymensingh", dist: 115, food: "Mukai (Sweet), Hilsa", place: "Shashi Lodge, Alexander Castle, Bangladesh Agricultural University" },
+            { id: 63, name: "Netrokona", div: "Mymensingh", dist: 160, food: "Balish Misti, Fish", place: "Birishiri (China Matir Pahar), Someshwari River" },
+            { id: 64, name: "Sherpur", div: "Mymensingh", dist: 190, food: "Chana, Malai", place: "Modhutila Ecopark, Gorni Teela, Rubber Garden" }
+        ];
+
+        // GLOBAL NEWS DATA
+        const newsData = [
+            { div: "Chittagong", type: "Policy", title: "New Saint Martin's Guidelines", date: "Oct 15", desc: "Eco-tourism limits set for overnight stays to protect coral reefs.", img: "https://images.unsplash.com/photo-1548674998-3490792ebaf3?q=80&w=600&auto=format&fit=crop" },
+            { div: "Chittagong", type: "Transport", title: "Dhaka-Cox's Bazar Train Update", date: "Oct 10", desc: "Two new non-stop intercity trains added for winter season.", img: "https://images.unsplash.com/photo-1474487548417-781cb714d22d?q=80&w=600&auto=format&fit=crop" },
+            { div: "Sylhet", type: "Nature", title: "Ratargul Forest Reopens", date: "Oct 08", desc: "Swamp forest open with new safety rules after seasonal maintenance.", img: "https://images.unsplash.com/photo-1627918499317-096730626306?q=80&w=600&auto=format&fit=crop" },
+            { div: "Khulna", type: "Culture", title: "Sundarbans Festival 2026", date: "Oct 12", desc: "Annual mangrove festival to feature folk music and boat races.", img: "https://images.unsplash.com/photo-1549423730-10492cb46a95?q=80&w=600&auto=format&fit=crop" },
+            { div: "Dhaka", type: "Food", title: "Puran Dhaka Food Fest", date: "Sep 28", desc: "A week-long celebration of authentic biryani heritage.", img: "https://images.unsplash.com/photo-1603352778799-6c3df9fb913f?q=80&w=600&auto=format&fit=crop" }
+        ];
+
+        let divisions = ["Dhaka", "Chittagong", "Sylhet", "Rajshahi", "Khulna", "Barisal", "Rangpur", "Mymensingh"];
+        let visitedDistricts = new Set();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initInfoPage();
+            initDistrictList();
+            initNewsPortal();
+            initDashboardGallery(); 
+            document.getElementById('year').textContent = new Date().getFullYear();
+            loadState();
+            document.getElementById('search-input').addEventListener('input', (e) => initInfoPage(e.target.value));
+        });
+
+        function switchPage(page) {
+            ['page-map', 'page-info', 'page-news', 'page-ai'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            ['nav-map', 'nav-info', 'nav-news', 'nav-ai'].forEach(id => {
+                document.getElementById(id).classList.remove('bg-[#ff5533]', 'text-white', 'shadow-sm');
+                document.getElementById(id).classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+            document.getElementById(`page-${page}`).classList.remove('hidden');
+            const btn = document.getElementById(`nav-${page}`);
+            btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            btn.classList.add('bg-[#ff5533]', 'text-white', 'shadow-sm');
+        }
+        
+        function initDashboardGallery() {
+            const gallery = document.getElementById('dashboard-news-gallery');
+            gallery.innerHTML = "";
+            newsData.slice(0, 3).forEach(news => {
+                gallery.innerHTML += `
+                    <div class="relative h-64 rounded-2xl overflow-hidden cursor-pointer group shadow-md" onclick="switchPage('news')">
+                        <img src="${news.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-5 w-full">
+                            <span class="bg-[#ff5533] text-white text-[10px] font-bold px-2 py-0.5 rounded mb-2 inline-block">${news.type}</span>
+                            <h3 class="text-white font-bold text-lg leading-tight mb-1 group-hover:text-orange-200 transition">${news.title}</h3>
+                            <p class="text-gray-300 text-xs line-clamp-2">${news.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function initNewsPortal() {
+            const heroContainer = document.getElementById('news-hero');
+            const mainStory = newsData[0];
+            const sideStories = newsData.slice(1, 3);
+            let heroHTML = `
+                <div class="news-hero-card relative h-full rounded-2xl overflow-hidden cursor-pointer group shadow-md">
+                    <img src="${mainStory.img}" class="news-hero-img w-full h-full object-cover absolute inset-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white w-full">
+                        <span class="bg-[#ff5533] px-2 py-1 text-xs font-bold rounded mb-2 inline-block">${mainStory.type}</span>
+                        <h3 class="text-2xl font-bold leading-tight mb-2 group-hover:text-orange-200 transition">${mainStory.title}</h3>
+                        <p class="text-sm text-gray-200 line-clamp-2">${mainStory.desc}</p>
+                    </div>
+                </div>
+                <div class="grid grid-rows-2 gap-4 h-full">`;
+            sideStories.forEach(s => {
+                heroHTML += `
+                    <div class="news-hero-card relative rounded-2xl overflow-hidden cursor-pointer group shadow-sm">
+                        <img src="${s.img}" class="news-hero-img w-full h-full object-cover absolute inset-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-4 text-white">
+                            <span class="bg-white/20 backdrop-blur px-2 py-0.5 text-[10px] font-bold rounded mb-1 inline-block">${s.type}</span>
+                            <h4 class="text-lg font-bold leading-tight group-hover:text-orange-200 transition">${s.title}</h4>
+                        </div>
+                    </div>`;
+            });
+            heroHTML += `</div>`;
+            heroContainer.innerHTML = heroHTML;
+
+            const filterContainer = document.getElementById('news-filters-page');
+            filterContainer.innerHTML = "";
+            ['All', 'Dhaka', 'Chittagong', 'Sylhet', 'Khulna'].forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `filter-btn px-4 py-1.5 rounded-full text-sm font-medium border border-gray-200 hover:bg-gray-50 transition ${cat === 'All' ? 'active' : 'bg-white text-gray-600'}`;
+                btn.innerText = cat;
+                btn.onclick = () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active', 'bg-[#ff5533]', 'text-white'));
+                    btn.classList.add('active');
+                    renderFeed(cat);
+                };
+                filterContainer.appendChild(btn);
+            });
+            renderFeed('All');
+        }
+
+        function renderFeed(filter) {
+            const feed = document.getElementById('news-feed');
+            feed.innerHTML = "";
+            (filter === 'All' ? newsData : newsData.filter(n => n.div === filter)).forEach(news => {
+                feed.innerHTML += `
+                    <div class="news-card-standard flex gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:border-orange-100 cursor-pointer">
+                        <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 relative"><img src="${news.img}" class="w-full h-full object-cover"></div>
+                        <div class="flex flex-col justify-center">
+                            <div class="flex items-center gap-2 mb-1 text-xs text-gray-400"><span class="font-bold text-[#ff5533]">${news.type}</span><span>•</span><span>${news.date}</span></div>
+                            <h4 class="text-base font-bold text-gray-800 leading-snug mb-1 hover:text-[#ff5533] transition">${news.title}</h4>
+                            <p class="text-xs text-gray-500 line-clamp-2">${news.desc}</p>
+                        </div>
+                    </div>`;
+            });
+            const trending = document.getElementById('trending-list');
+            trending.innerHTML = "";
+            [1,2,3].forEach((i) => {
+                const item = newsData[newsData.length - i];
+                trending.innerHTML += `<li class="flex gap-3 items-center cursor-pointer group"><span class="text-2xl font-bold text-gray-200 group-hover:text-[#ff5533] transition">0${i}</span><div><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">${item.div}</span><h5 class="text-sm font-bold text-gray-700 leading-tight group-hover:text-black transition">${item.title}</h5></div></li>`;
+            });
+        }
+
+        // --- TRACKER LOGIC ---
+        function initDistrictList() {
+            const container = document.getElementById('district-checkbox-list');
+            container.innerHTML = "";
+            divisions.forEach(div => {
+                const group = document.createElement('div');
+                group.className = "mb-4"; 
+                group.innerHTML = `<div class="font-bold text-xs text-gray-400 uppercase tracking-wider mb-2 pb-1 border-b border-gray-100">${div}</div>`;
+                districtsData.filter(d => d.div === div).forEach(dist => {
+                    const row = document.createElement('div');
+                    row.className = "flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded cursor-pointer transition";
+                    row.onclick = (e) => { if(e.target.type !== 'checkbox') toggleDistrict(dist.id); };
+                    row.innerHTML = `<input type="checkbox" id="chk-${dist.id}" onchange="toggleDistrict(${dist.id})" class="w-3.5 h-3.5 text-[#ff5533] rounded focus:ring-[#ff5533] flex-shrink-0"><span class="text-[11px] leading-tight text-gray-700 font-medium select-none">${dist.name}</span>`;
+                    group.appendChild(row);
+                });
+                container.appendChild(group);
+            });
+        }
+
+        function toggleDistrict(id) {
+            visitedDistricts.has(id) ? visitedDistricts.delete(id) : visitedDistricts.add(id);
+            document.querySelectorAll(`input[id^='chk-']`).forEach(chk => { if(parseInt(chk.id.split('-')[1]) === id) chk.checked = visitedDistricts.has(id); });
+            updateScore(); saveState();
+        }
+        function clearAll() { visitedDistricts.clear(); loadState(); saveState(); }
+        function updateScore() {
+            const pct = Math.round((visitedDistricts.size / districtsData.length) * 100);
+            document.getElementById('score-count').innerText = visitedDistricts.size;
+            document.getElementById('score-percent').innerText = pct;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+        function saveState() { localStorage.setItem('visitedDistricts', JSON.stringify([...visitedDistricts])); }
+        function loadState() {
+            const saved = localStorage.getItem('visitedDistricts');
+            if (saved) JSON.parse(saved).forEach(id => visitedDistricts.add(id));
+            districtsData.forEach(d => { const chk = document.getElementById(`chk-${d.id}`); if(chk) chk.checked = visitedDistricts.has(d.id); });
+            updateScore();
+        }
+
+        // --- DISTRICTS INFO PAGE (Color & Modal Logic) ---
+        function initInfoPage(filter = "") {
+            const grid = document.getElementById('info-grid');
+            grid.innerHTML = "";
+            const filteredData = districtsData.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()) || d.div.toLowerCase().includes(filter.toLowerCase()));
+            filteredData.forEach(dist => {
+                // Apply theme class based on division
+                const themeClass = `theme-${dist.div}`;
+                grid.innerHTML += `
+                    <div onclick="openDistrictModal(${dist.id})" class="info-card rounded-2xl p-6 shadow-sm border border-transparent ${themeClass}">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-white/60 text-gray-800 backdrop-blur-sm border border-white/50">${dist.div}</span>
+                                <h3 class="text-xl font-bold text-gray-800 mt-2">${dist.name}</h3>
+                            </div>
+                            <span class="text-xs font-semibold text-gray-500 bg-white/50 px-2 py-1 rounded-md">${dist.dist}km</span>
+                        </div>
+                        <div class="space-y-2 opacity-80">
+                            <div class="flex items-center gap-2 text-sm text-gray-700"><i class="fa-solid fa-utensils text-gray-900 w-4"></i><span class="truncate">${dist.food.split(',')[0]}...</span></div>
+                            <div class="flex items-center gap-2 text-sm text-gray-700"><i class="fa-solid fa-map-pin text-gray-900 w-4"></i><span class="truncate">${dist.place.split(',')[0]}...</span></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- MODAL LOGIC (The 80% Pop Up) ---
+        function openDistrictModal(id) {
+            const dist = districtsData.find(d => d.id === id);
+            if(!dist) return;
+
+            document.getElementById('modal-title').innerText = dist.name;
+            document.getElementById('modal-badge').innerText = dist.div + " Division";
+            
+            // Apply color to badge
+            const colors = { "Dhaka": "bg-red-100 text-red-700", "Chittagong": "bg-green-100 text-green-700", "Sylhet": "bg-emerald-100 text-emerald-700", "Rajshahi": "bg-amber-100 text-amber-700", "Khulna": "bg-orange-100 text-orange-700", "Barisal": "bg-blue-100 text-blue-700", "Rangpur": "bg-purple-100 text-purple-700", "Mymensingh": "bg-pink-100 text-pink-700" };
+            document.getElementById('modal-badge').className = `inline-block self-start px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 ${colors[dist.div] || 'bg-gray-100'}`;
+
+            document.getElementById('modal-dist').innerText = dist.dist + " km";
+            document.getElementById('modal-food').innerText = dist.food;
+            document.getElementById('modal-place').innerText = dist.place;
+
+            // Load Map (Free Google Maps Embed)
+            const mapUrl = `https://maps.google.com/maps?q=${dist.name}+District,Bangladesh&t=&z=10&ie=UTF8&iwloc=&output=embed`;
+            document.getElementById('modal-map').src = mapUrl;
+
+            // Show Modal
+            document.getElementById('district-modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('district-modal').classList.remove('open');
+            setTimeout(() => { document.getElementById('modal-map').src = ""; }, 300); // Clear map to stop processing
+        }
+
+        // Close modal on click outside
+        document.getElementById('district-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('district-modal')) closeModal();
+        });
+
+        // --- AI LOGIC ---
+        function analyzePersona() {
+            const btn = document.getElementById('btn-persona');
+            const resultDiv = document.getElementById('persona-result');
+            if(visitedDistricts.size === 0) { alert("Please select some districts in the Tracker tab first!"); return; }
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Analyzing...'; btn.disabled = true;
+            setTimeout(() => {
+                let counts = {};
+                visitedDistricts.forEach(id => { const d = districtsData.find(x => x.id === id); if(d) counts[d.div] = (counts[d.div] || 0) + 1; });
+                const persona = (counts["Sylhet"] > 1 || counts["Chittagong"] > 2) ? "Nature Lover & Adventurer" : (counts["Dhaka"] > 3) ? "Heritage & City Explorer" : "The Grand Explorer";
+                resultDiv.innerHTML = marked.parse(`### 🎭 Your Persona: ${persona}\n\nBased on your travel history.`);
+                resultDiv.classList.remove('hidden'); btn.innerHTML = 'Analyze Again'; btn.disabled = false;
+            }, 1500);
+        }
+
+        function planTrip() {
+            const input = document.getElementById('planner-input').value;
+            const btn = document.getElementById('btn-planner');
+            const resultDiv = document.getElementById('planner-result');
+            if(!input) { alert("Please describe your trip idea!"); return; }
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generating Plan...'; btn.disabled = true;
+            setTimeout(() => {
+                resultDiv.innerHTML = marked.parse(`### ✈️ Custom Itinerary\n\n**Day 1:** Explore local heritage.\n**Day 2:** Adventure and food tasting.\n**Day 3:** Relax and return.`);
+                resultDiv.classList.remove('hidden'); btn.innerHTML = 'Generate New Plan'; btn.disabled = false;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
